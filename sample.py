@@ -11,7 +11,7 @@ ip = "8.8.8.8"
 
 database = ip2location_python_c.IP2Location()
 
-database.open(os.path.join("data", "IPV6-COUNTRY.BIN"))
+database.open(os.path.join("data", "IP-COUNTRY.BIN"))
 
 rec = database.get_all(ip)
 
