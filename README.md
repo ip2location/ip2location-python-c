@@ -22,10 +22,10 @@ This library required the **IP2Location C Library** to work. You can install it 
 
 Run `python sample.py` in your terminal.
 
-## Sample BIN Databases
+## IP2Location BIN Databases
 
 - Download free IP2Location LITE databases at [https://lite.ip2location.com](https://lite.ip2location.com/)
-- Download IP2Location sample databases at <https://www.ip2location.com/developers>
+- Download IP2Location Commercial databases at <https://www.ip2location.com>
 
 ## IPv4 BIN vs IPv6 BIN
 
