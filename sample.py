@@ -35,6 +35,6 @@ print rec.mnc
 print rec.mobile_brand
 print rec.elevation
 print rec.usage_type
-print("\nYou may download the DB24 sample BIN at http://www.ip2location.com/downloads/sample6.bin.db24.zip for full data display.")
+print("\nYou may download the DB24 sample BIN at https://www.ip2location.com/downloads/sample6.bin.db24.zip for full data display.")
 
 database.close()
