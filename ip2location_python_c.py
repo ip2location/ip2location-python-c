@@ -1,6 +1,6 @@
 '''
  * IP2Location C library is distributed under MIT license
- * Copyright (c) 2013-2019 IP2Location.com. support@ip2location.com
+ * Copyright (c) 2013-2021 IP2Location.com. support@ip2location.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the MIT license
@@ -9,12 +9,17 @@
 from ctypes import *
 from ctypes.util import find_library
 
+class IP2Location_lookup_mode :
+    IP2LOCATION_FILE_IO = 0
+    IP2LOCATION_CACHE_MEMORY = 1
+    IP2LOCATION_SHARED_MEMORY = 2
+
 
 class C_IP2LocationRecord(Structure):
     '''
         Define the IP2Location Record result structure.
     '''
-    _fields_=[("country_short",c_char_p),("country_long",c_char_p),("region",c_char_p),("city",c_char_p),("isp",c_char_p),("latitude",c_float),("longitude",c_float),("domain",c_char_p),("zipcode",c_char_p),("timezone",c_char_p),("netspeed",c_char_p),("idd_code",c_char_p),("area_code",c_char_p),("weather_code",c_char_p),("weather_name",c_char_p),("mcc",c_char_p),("mnc",c_char_p),("mobile_brand",c_char_p),("elevation",c_float),("usage_type",c_char_p)]
+    _fields_=[("country_short",c_char_p),("country_long",c_char_p),("region",c_char_p),("city",c_char_p),("isp",c_char_p),("latitude",c_float),("longitude",c_float),("domain",c_char_p),("zipcode",c_char_p),("timezone",c_char_p),("netspeed",c_char_p),("idd_code",c_char_p),("area_code",c_char_p),("weather_code",c_char_p),("weather_name",c_char_p),("mcc",c_char_p),("mnc",c_char_p),("mobile_brand",c_char_p),("elevation",c_float),("usage_type",c_char_p),("address_type",c_char_p),("category",c_char_p)]
 
 
 class IP2LocationRecord:
@@ -40,6 +45,8 @@ class IP2LocationRecord:
     mobile_brand = None
     elevation = None
     usage_type = None
+    address_type = None
+    category = None
 
 
 class IP2Location(object):
@@ -57,19 +64,23 @@ class IP2Location(object):
                 self.ip2location_c = CDLL(find_library('IP2Location'))
 
     def load(self, libraryname):
-    '''
-        Function to load the IP2Location C Library if user choose to load their own copy of IP2Location C Library.
-    '''
+        '''
+            Function to load the IP2Location C Library if user choose to load their own copy of IP2Location C Library.
+        '''
         self.ip2location_c = CDLL(libraryname)
 
-    def open(self, filename):
+    def open(self, filename, mode=None):
         ''' 
             Function to pass the database name and path to IP2Location_open in IP2Location C library.
             Set the argument and response types of the function to avoid data compatibility issue. 
         '''
+        if (mode == None):
+            mode = IP2Location_lookup_mode.IP2LOCATION_FILE_IO
         self.ip2location_c.IP2Location_open.argtypes = [c_char_p]
         self.ip2location_c.IP2Location_open.restype = c_void_p
+        self.ip2location_c.IP2Location_open_mem.argtypes = [c_void_p, c_int]
         self.ip2location_database_pointer = self.ip2location_c.IP2Location_open(filename)
+        self.ip2location_c.IP2Location_open_mem(self.ip2location_database_pointer, mode)
 
     def get_country_short(self, ip):
         ''' Get country_short '''
@@ -151,6 +162,14 @@ class IP2Location(object):
         ''' Get usage_type '''
         rec = self.get_all(ip)
         return rec and rec.usage_type
+    def get_address_type(self, ip):
+        ''' Get address_type '''
+        rec = self.get_all(ip)
+        return rec and rec.address_type
+    def get_category(self, ip):
+        ''' Get category '''
+        rec = self.get_all(ip)
+        return rec and rec.category
 
     def get_all(self, ip):
         ''' set the argument and response types of the function for data compatibility issue. '''
@@ -179,6 +198,8 @@ class IP2Location(object):
         self.rec.mobile_brand = self.result.contents.mobile_brand
         self.rec.elevation = self.result.contents.elevation
         self.rec.usage_type = self.result.contents.usage_type
+        self.rec.address_type = self.result.contents.address_type
+        self.rec.category = self.result.contents.category
         return self.rec
 
     def close(self):

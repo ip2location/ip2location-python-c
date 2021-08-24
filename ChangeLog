@@ -1,3 +1,7 @@
+1.1.0	2021-08-24
+	* Added supports for DB25.
+	* Added new BIN file open mode.
+
 1.0.0	2019-04-05
 	* Initial release
 	* Support IP2Location IPv6
