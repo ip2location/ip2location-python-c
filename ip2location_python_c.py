@@ -179,7 +179,7 @@ class IP2Location(object):
     def get_all(self, ip):
         ''' set the argument and response types of the function for data compatibility issue. '''
         self.ip2location_c.IP2Location_get_all.argtypes = [c_void_p, c_char_p]
-        # Need to set to the struct that created in the begining to get valid output instead of a pointer.
+        # Need to set to the struct to be created in the beginning to get valid output instead of a pointer.
         self.ip2location_c.IP2Location_get_all.restype = POINTER(C_IP2LocationRecord) 
         self.rec = IP2LocationRecord()
         # self.result = self.ip2location_c.IP2Location_get_all(self.ip2location_database_pointer, ip)
